@@ -52,7 +52,11 @@ grafana-server --config=/usr/local/etc/grafana/grafana.ini --homepath /usr/local
 
 ![grafana dashboard](images/grafana_dashboard.png)
 
-Grafana Editor:  
-Honestly, the first attempts with the druid editor are try & errors. It is important to save every part of the query with 'add tag'.  
+Honestly, the druid editor is a diva and it needs some time to get used to it.... 
+It is important to save every part of the query with 'add tag'.  
 *Limitation:* with the current grafana-druid plugin (v.0.0.5) the query is at least 60 seconds. To get around this, you have to calculate the sum of the values across all events and divide them by the number of events to get an average. mysql (graph on the left side) is able to show all events individual.   
 ![grafana dashboard](images/grafana_editor2.png)
+
+details:
+![grafana dashboard](images/grafana_detail.png)
+
