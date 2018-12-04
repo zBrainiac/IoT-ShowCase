@@ -1,5 +1,15 @@
 # IoT-ShowCase
-IoT Agent > local mqtt forward to central mqtt gateway > NIFI > Kafka > Druid &amp; Grafana
+
+**Vison**
+e2e IoT Show Case which demonstrating a (near) real-time monitoring
+![IoT Show Case Overview](images/IoT-ShowCaseOverview.png)
+
+The idea is:  
+1.) to have multiple IoT agents / sensors which using a local mqtt server instance to reduce the risk of loss of data  
+2.) Local mqtt server forward to messages to regional mqtt gateway  
+3.) NIFI collects the messages form the regional gateway and pushing into Kafka and as JSON & CSV files into HDFS  
+4.) Druid runs the Kafka-Index-Service with a supervison-spec with fits to the sensor messages  
+5.) Grafana is used for the visualisation 
 
 
 **Kafka:**
@@ -9,7 +19,11 @@ cd /usr/hdp/current/kafka-broker/
 ./bin/kafka-console-consumer.sh --bootstrap-server druid.hdp.md:6667 --topic sensor_md
 
 
-**Druid - supervisior (kafka index service:**
+**Druid - supervisior (Kafka-Index-Service):**
+
+The 'Kafka Ingestion' is still in Technical Preview as of today, so It doesn’t come bundled as part of the platform. As such, some minor configuration changes will need to be applied.  
+In Ambari, navigate to the druid service and click on the configs tab. Now, using the filter, search for “druid.extensions.loadList”.  
+For this parameter, enter “druid-kafka-indexing-service” to the list. This parameter essentially tells Druid to load these extensions on startup on the cluster.
 
 cd /usr/hdp/current/druid-broker/  
 mkdir supervisor  
@@ -24,10 +38,21 @@ watch -n60 python3 mqtt_loop.py
 
 **grafana:**
 
+Install druid-plugin:
+grafana-cli plugins install abhisant-druid-datasource
+
+
+
 start grafana server:  
 grafana-server --config=/usr/local/etc/grafana/grafana.ini --homepath /usr/local/share/grafana cfg:default.paths.logs=/usr/local/var/log/grafana cfg:default.paths.data=/usr/local/var/lib/grafana cfg:default.paths.plugins=/usr/local/var/lib/grafana/plugins
  
-**add druid-plugin:** 
 
 
 **configure dashboard:**
+
+![grafana dashboard](images/grafana_dashboard.png)
+
+Grafana Editor:  
+Honestly, the first attempts with the druid editor are try & errors. It is important to save every part of the query with 'add tag'.  
+*Limitation:* with the current grafana-druid plugin (v.0.0.5) the query is at least 60 seconds. To get around this, you have to calculate the sum of the values across all events and divide them by the number of events to get an average. mysql (graph on the left side) is able to show all events individual.   
+![grafana dashboard](images/grafana_editor2.png)
