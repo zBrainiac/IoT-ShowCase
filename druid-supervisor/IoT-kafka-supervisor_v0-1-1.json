@@ -1,0 +1,64 @@
+{
+    "type": "kafka",
+    "dataSchema": {
+        "dataSource": "sensor_md_v0-1-0",
+        "parser": {
+            "type": "string",
+            "parseSpec": {
+                "format": "json",
+                "timestampSpec": {
+                    "column": "utc_time",
+                    "format": "auto"
+                },
+                "dimensionsSpec": {
+                    "dimensions": [
+                        "host",
+                        {
+                            "name": "value_1",
+                            "type": "long"
+                        },
+                        {
+                            "name": "value_2",
+                            "type": "long"
+                        },
+                        {
+                            "name": "value_3",
+                            "type": "long"
+                        },
+                        {
+                            "name": "unix_time",
+                            "type": "long"
+                        }
+                    ],
+                    "dimensionExclusions": []
+                }
+            }
+        },
+        "metricsSpec": [
+            {
+                "type": "count",
+                "name": "count"
+            }
+        ],
+        "granularitySpec": {
+            "type": "uniform",
+            "segmentGranularity": "DAY",
+            "queryGranularity": "NONE",
+            "rollup": false
+        }
+    },
+    "tuningConfig": {
+        "type": "kafka",
+        "reportParseExceptions": false,
+        "maxRowPerSegment": 100000
+    },
+    "ioConfig": {
+        "topic": "sensor_md",
+        "replicas": 1,
+        "taskDuration": "PT10M",
+        "completionTimeout": "PT10M",
+        "consumerProperties": {
+            "bootstrap.servers": "druid.hdp.md:6667"
+        }
+    }
+}
