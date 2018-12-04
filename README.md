@@ -13,8 +13,8 @@ cd /usr/hdp/current/kafka-broker/
 
 cd /usr/hdp/current/druid-broker/  
 mkdir supervisor  
-copy file IoT-kafka-supervisor_v0-1-0.json  
-curl -XPOST -H'Content-Type: application/json' -d @Iot-supervisor-v0-1-0.json http://druid.hdp.md:8090/druid/indexer/v1/supervisor
+copy file IoT-kafka-supervisor_v0-1-1.json  
+curl -XPOST -H'Content-Type: application/json' -d @Iot-supervisor-v0-1-1.json http://druid.hdp.md:8090/druid/indexer/v1/supervisor
 
 
 **IoT Sensor:**
