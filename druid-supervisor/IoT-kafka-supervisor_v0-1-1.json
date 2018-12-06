@@ -1,7 +1,7 @@
 {
     "type": "kafka",
     "dataSchema": {
-        "dataSource": "sensor_md_v0-1-0",
+        "dataSource": "sensor_md_v0-1-1",
         "parser": {
             "type": "string",
             "parseSpec": {

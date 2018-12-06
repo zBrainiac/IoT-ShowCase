@@ -1,7 +1,9 @@
-# IoT-ShowCase
+# IoT Show Case
 
-**Vison**
-e2e IoT Show Case which demonstrating a (near) real-time monitoring
+**Vison**  
+e2e IoT Show Case which demonstrating a (near) real-time monitoring in grafana
+
+
 ![IoT Show Case Overview](images/IoT-ShowCaseOverview.png)
 
 **The idea is:**  
@@ -12,7 +14,14 @@ e2e IoT Show Case which demonstrating a (near) real-time monitoring
 5.) Grafana is used for the visualisation 
 
 
-**Kafka:**
+**Setup**  
+running on Virtualbox and is based on the latest Hortonworks release of:  
+1.) Ambari  
+2.) HDP  
+3.) HDF 
+
+
+**Kafka:**  
 cd /usr/hdp/current/kafka-broker/  
 ./bin/kafka-topics.sh --create --zookeeper druid.hdp.md:2181 --replication-factor 1 --partitions 1 --topic sensor_md  
 ./bin/kafka-topics.sh --list --zookeeper druid.hdp.md:2181  
@@ -21,7 +30,7 @@ cd /usr/hdp/current/kafka-broker/
 
 **Druid - supervisior (Kafka-Index-Service):**
 
-FYI: *The Kafka Ingestion is still in Technical Preview as of today, so It doesn’t come bundled as part of the platform. As such, some minor configuration changes will need to be applied.  
+>FYI: *The Kafka Ingestion is still in Technical Preview as of today, so It doesn’t come bundled as part of the platform. As such, some minor configuration changes will need to be applied.  
 In Ambari, navigate to the druid service and click on the configs tab. Now, using the filter, search for “druid.extensions.loadList”.  
 For this parameter, enter “druid-kafka-indexing-service” to the list. This parameter essentially tells Druid to load these extensions on startup on the cluster.*
 
@@ -35,10 +44,18 @@ start *supervisor* task:
 curl -XPOST -H'Content-Type: application/json' -d @Iot-supervisor-v0-1-1.json http://druid.hdp.md:8090/druid/indexer/v1/supervisor
 
 
+**NIFI**  
+start NIFI UI
+upload NIFI_mqtt-kafka-mysql.xml  
+drop new templete  
+
+
 **IoT Sensor:**  
 start data-generator:  
 watch -n60 python3 mqtt_loop.py
 
+*Data example*  
+{"host": "sensor-4711", "unix_time": 1543904051, "utc_time": "2018-12-04T07:14:11.928913", "value_1": 33, "value_2": 34, "value_3": 60}
 
 **Grafana:**  
 Install druid-plugin:  
@@ -65,7 +82,7 @@ Druid-Plugin editor details:
 ![grafana dashboard](images/grafana_detail.png)
 
 
-exported Model:
+relevant part of the exported grafana spec:
 
       "targets": [
         {

@@ -11,10 +11,10 @@ import random
 
 
 # Define Variables
-MQTT_HOST = "192.168.108"
+MQTT_HOST = "192.168.58.3"
 MQTT_PORT = 1883
 MQTT_KEEPALIVE_INTERVAL = 45
-MQTT_TOPIC = "sensor/md_test_retained"
+MQTT_TOPIC = "sensor/md"
 count = 0
 
 while count < 2:
