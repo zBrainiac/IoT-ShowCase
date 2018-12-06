@@ -1,21 +1,21 @@
 # IoT Show Case
 
 **Vison**  
-e2e IoT Show Case which demonstrating a (near) real-time monitoring in grafana
+e2e IoT Show Case which visualizes the data (near) real-time in grafana
 
 
 ![IoT Show Case Overview](images/IoT-ShowCaseOverview.png)
 
 **The idea is:**  
-1.) to have multiple IoT agents / sensors which using a local mqtt server instance to reduce the risk of loss of data  
-2.) Local mqtt server forward to messages to regional mqtt gateway  
-3.) NIFI collects the messages form the regional gateway and pushing into Kafka and as JSON & CSV files into HDFS  
-4.) Druid runs the Kafka-Index-Service with a supervison-spec with fits to the sensor messages  
-5.) Grafana is used for the visualisation 
+1.) have multiple IoT agents / sensors which using a local mqtt server instance to avoid the risk of loss of data  
+2.) mqtt server in the sensor forward to messages to regional mqtt gateway  e.g. 'EMEA Gateway'  
+3.) NIFI collects the messages form the regional gateway and pushing into a Kafka Topic 'sensor_md' and stores the messages in JSON & CSV format into HDFS  
+4.) Druid runs the Kafka-Index-Service with a supervison-spec listening on the Kafka Topic 'sensor_md' - Supewrvision spec corresponding to the JSON format of the sensor messages  
+5.) The Druid-plugin in Grafana is used for the visualisation 
 
 
-**Setup**  
-running on Virtualbox and is based on the latest Hortonworks release of:  
+#Setup  
+Is running on Virtualbox and is based on the latest Hortonworks release of:  
 1.) Ambari  
 2.) HDP  
 3.) HDF 
@@ -45,22 +45,21 @@ curl -XPOST -H'Content-Type: application/json' -d @Iot-supervisor-v0-1-1.json ht
 
 
 **NIFI**  
-start NIFI UI
-upload NIFI_mqtt-kafka-mysql.xml  
-drop new templete  
+start NIFI UI vi quicklink in ambari  
+upload NIFI_mqtt-kafka-mysql.xml as a new template  
+drop new templete into a empty flow   
 
 
 **IoT Sensor:**  
-start data-generator:  
+start data-generator in the local pc:  
 watch -n60 python3 mqtt_loop.py
 
 *Data example*  
 {"host": "sensor-4711", "unix_time": 1543904051, "utc_time": "2018-12-04T07:14:11.928913", "value_1": 33, "value_2": 34, "value_3": 60}
 
 **Grafana:**  
-Install druid-plugin:  
+Download and install latest grafana local & Install druid-plugin:  
 grafana-cli plugins install abhisant-druid-datasource
-
 
 
 start grafana server:  
